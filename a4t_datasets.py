@@ -44,7 +44,7 @@ def load(dataset='mnist', dataset_root='./datasets', batch_size=32, image_size=N
         test_dataset = torchvision.datasets.EMNIST(root=dataset_root, split='letters', train=False, download=True, transform=transform_test)
     elif dataset == 'cifar':
         transform_train = transforms.Compose([
-            transforms.RandomCrop(image_size, padding = 4 * image_size / 32),
+            transforms.RandomCrop(image_size, padding = 4),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
         ])
@@ -57,10 +57,9 @@ def load(dataset='mnist', dataset_root='./datasets', batch_size=32, image_size=N
             transforms.ToTensor(),
         ])
         if not os.path.exists(f'{dataset_root}/imagenette2'):
-            train_dataset = torchvision.datasets.Imagenette(dataset_root, split="train", download=True, target_transform=transform_train)
-        else:
-            train_dataset = torchvision.datasets.ImageFolder(root=f'{dataset_root}/imagenette2/train', transform=transform_train)
-        test_dataset = torchvision.datasets.ImageFolder(root=f'{dataset_root}/imagenette2/val', transform=transform_test)
+            _ = torchvision.datasets.Imagenette(dataset_root, split="train", download=True, transform=transform_train)
+        train_dataset = torchvision.datasets.Imagenette(dataset_root, split="train", download=False, transform=transform_train)
+        test_dataset = torchvision.datasets.Imagenette(dataset_root, split="val", download=False, transform=transform_test)
     else:
         raise ValueError(f"Unsupported dataset: {dataset}")
     
@@ -89,7 +88,7 @@ def plot_sample_grid(data_loader, grid_size=(5, 5), fig_size=None, verbose=0):
     used_classes = set()
     class_names = getattr(dataset, 'classes', None)
 
-    max_class_length = max((len(name) for name in class_names), default=0) if class_names else -1
+    max_class_length = max((len(str(name)) for name in class_names), default=0) if class_names else -1
 
     for i in range(num_samples):
         # getting image as nparray
