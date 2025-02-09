@@ -1,6 +1,10 @@
 import os
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 import torchvision
-import torchvision.transforms as transforms
+import torchvision.transforms.v2 as transforms
 from torch.utils.data import DataLoader
 
 
@@ -67,10 +71,6 @@ def load(dataset='mnist', dataset_root='./datasets', batch_size=32, image_size=N
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
     
     return train_loader, test_loader
-
-
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 def plot_sample_grid(data_loader, grid_size=(5, 5), fig_size=None, verbose=0):
